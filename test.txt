@@ -1,0 +1,2 @@
+let prixTtc =  prixHt * 119 / 100;
+prixTtc + 100.
