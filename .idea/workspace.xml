@@ -4,8 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2bd5f218-e8ab-4161-93c4-2f5c99b4aa09" name="Changes" comment="ex 1">
-      <change beforePath="$PROJECT_DIR$/src/main/java/fr/usmb/m1isc/compilation/tp/Arbre.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fr/usmb/m1isc/compilation/tp/Arbre.java" afterDir="false" />
+    <list default="true" id="2bd5f218-e8ab-4161-93c4-2f5c99b4aa09" name="Changes" comment="test3">
+      <change afterPath="$PROJECT_DIR$/README.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TP_INFO805_Lambada.asm" beforeDir="false" afterPath="$PROJECT_DIR$/TP_INFO805_Lambada.asm" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -230,7 +232,7 @@
       <workItem from="1681716987480" duration="39000" />
       <workItem from="1681729324743" duration="182000" />
       <workItem from="1681799977514" duration="7000" />
-      <workItem from="1681972313891" duration="1291000" />
+      <workItem from="1681972313891" duration="5335000" />
     </task>
     <task id="LOCAL-00001" summary="while">
       <created>1679414592017</created>
@@ -246,7 +248,14 @@
       <option name="project" value="LOCAL" />
       <updated>1680185699475</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="test3">
+      <created>1681974145073</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1681974145073</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -266,6 +275,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="while" />
     <MESSAGE value="ex 1" />
-    <option name="LAST_COMMIT_MESSAGE" value="ex 1" />
+    <MESSAGE value="test3" />
+    <option name="LAST_COMMIT_MESSAGE" value="test3" />
   </component>
 </project>
