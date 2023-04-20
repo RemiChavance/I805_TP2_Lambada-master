@@ -86,46 +86,177 @@ public class Arbre {
     }
 
     private String generateCodeSection() {
-        String resultat = "";
+        StringBuilder resultat = new StringBuilder();
 
-        // POINT VIRGULE
         if (this.type == TypeNode.SEMI) {
             return this.fg.generateCodeSection() + this.fd.generateCodeSection();
         }
-
-        // ENTIER / IDENT
-        else if ((this.type == TypeNode.ENTIER) || (this.type == TypeNode.IDENT)) {
-            return TABULATION + "mov eax, " + this.racine + RETOUR_LIGNE;
-        }
-
-        // OPERATEUR (+, -, *, /)
-        else if (this.type == TypeNode.OPERATEUR) {
-            resultat += this.fg.generateCodeSection();
-            resultat += TABULATION + "push eax" + RETOUR_LIGNE;
-            resultat += this.fd.generateCodeSection();
-            resultat += TABULATION + "pop ebx" + RETOUR_LIGNE;
+        if (this.type == TypeNode.ENTIER || this.type == TypeNode.IDENT) {
+            resultat.append("\tmov eax, ").append(this.racine).append("\n");
+        } else if (this.type == TypeNode.OPERATEUR) {
+            resultat.append(this.fg.generateCodeSection());
+            resultat.append("\tpush eax\n");
+            resultat.append(this.fd.generateCodeSection());
+            resultat.append("\tpop ebx\n");
             switch (this.racine) {
-                case "+" -> resultat += TABULATION + "add eax, ebx" + RETOUR_LIGNE;
-                case "*" -> resultat += TABULATION + "mul eax, ebx" + RETOUR_LIGNE;
-                case "-" -> {
-                    resultat += TABULATION + "sub ebx, eax" + RETOUR_LIGNE;
-                    resultat += TABULATION + "mov eax, ebx" + RETOUR_LIGNE;
-                }
-                case "/" -> {
-                    resultat += TABULATION + "div ebx, eax" + RETOUR_LIGNE;
-                    resultat += TABULATION + "mov eax, ebx" + RETOUR_LIGNE;
-                }
+                case "+":
+                    resultat.append("\tadd eax, ebx\n");
+                    break;
+                case "-":
+                    resultat.append("\tsub ebx, eax\n");
+                    resultat.append("\tmov eax, ebx\n");
+                    break;
+                case "*":
+                    resultat.append("\tmul eax, ebx\n");
+                    break;
+                case "/":
+                    resultat.append("\tdiv ebx, eax\n");
+                    resultat.append("\tmov eax, ebx\n");
+                    break;
+                default:
+                    break;
             }
-            return resultat;
+        } else if (this.type == TypeNode.LET) {
+            resultat.append(this.fd.generateCodeSection());
+            resultat.append("\tmov ").append(this.fg.racine).append(", eax\n");
+        } else if (this.type == TypeNode.INPUT) {
+            resultat.append("\tin eax\n");
+        } else if (this.type == TypeNode.OUTPUT) {
+            resultat.append("\tmov eax, ").append(this.racine).append("\n");
+            resultat.append("\tout eax\n");
+        }else if (this.type == TypeNode.LT) {
+            resultat.append(this.fg.generateCodeSection());
+            resultat.append( "\tpush eax\n");
+            resultat.append( this.fd.generateCodeSection());
+            resultat.append( "\tpop ebx\n");
+            resultat.append( "\tsub eax, ebx\n");
+            resultat.append( "\tjle faux_lt_1\n");
+            resultat.append( "\tmov eax, 1\n");
+            resultat.append( "\tjmp sortie_lt_1\n");
+            resultat.append( "faux_lt_1 :\n");
+            resultat.append( "\tmov eax, 0\n");
+            resultat.append( "sortie_lt_1 :\n");
+            return resultat.toString();
         }
 
-        // LET
-        else if (this.type == TypeNode.LET) {
-            resultat += this.fd.generateCodeSection();
-            resultat += TABULATION + "mov " + this.fg.racine + ", eax" + RETOUR_LIGNE;
-            return resultat;
+        else if (this.type == TypeNode.LTE) {
+            resultat.append( this.fg.generateCodeSection());
+            resultat.append( "\tpush eax\n");
+            resultat.append( this.fd.generateCodeSection());
+            resultat.append( "\tpop ebx\n");
+            resultat.append( "\tsub eax, ebx\n");
+            resultat.append( "\tjl faux_lte_1\n");
+            resultat.append( "\tmov eax, 1\n");
+            resultat.append( "\tjmp sortie_lte_1\n");
+            resultat.append( "faux_lte_1 :\n");
+            resultat.append( "\tmov eax, 0\n");
+            resultat.append( "sortie_lte_1 :\n");
+            return resultat.toString();
+        }
+        else if (this.type == TypeNode.GT) {
+            resultat.append(this.fg.generateCodeSection());
+            resultat.append("\tpush eax\n");
+            resultat.append(this.fd.generateCodeSection());
+            resultat.append("\tpop ebx\n");
+            resultat.append("\tsub eax, ebx\n");
+            resultat.append("\tjge faux_gt_1\n");
+            resultat.append("\tmov eax, 1\n");
+            resultat.append("\tjmp sortie_gt_1\n");
+            resultat.append("faux_gt_1 :\n");
+            resultat.append("\tmov eax, 0\n");
+            resultat.append("sortie_gt_1 :\n");
+            return resultat.toString();
         }
 
-        return resultat;
+        else if (this.type == TypeNode.GTE) {
+            resultat.append(this.fg.generateCodeSection());
+            resultat.append("\tpush eax\n");
+            resultat.append(this.fd.generateCodeSection());
+            resultat.append("\tpop ebx\n");
+            resultat.append("\tsub eax, ebx\n");
+            resultat.append("\tjg faux_gte_1\n");
+            resultat.append("\tmov eax, 1\n");
+            resultat.append("\tjmp sortie_gte_1\n");
+            resultat.append("faux_gte_1 :\n");
+            resultat.append("\tmov eax, 0\n");
+            resultat.append("sortie_gte_1 :\n");
+            return resultat.toString();
+        }
+        else if (this.type == TypeNode.EGAL) {
+            resultat.append( this.fg.generateCodeSection());
+            resultat.append( "\tpush eax\n");
+            resultat.append( this.fd.generateCodeSection());
+            resultat.append( "\tpop ebx\n");
+            resultat.append( "\tsub eax, ebx\n");
+            resultat.append( "\tjnz faux_egal_1\n");
+            resultat.append( "\tmov eax, 1\n");
+            resultat.append( "\tjmp sortie_egal_1\n");
+            resultat.append( "faux_egal_1 :\n");
+            resultat.append( "\tmov eax, 0\n");
+            resultat.append( "sortie_egal_1 :\n");
+            return resultat.toString();
+        }
+        else if (this.type == TypeNode.MOD) {
+            resultat.append( this.fd.generateCodeSection());
+            resultat.append( "\tpush eax\n");
+            resultat.append( this.fg.generateCodeSection());
+            resultat.append( "\tpop ebx\n");
+            resultat.append( "\tmov ecx, eax\n");
+            resultat.append( "\tdiv ecx, ebx\n");
+            resultat.append( "\tmul ecx, ebx\n");
+            resultat.append( "\tsub eax, ecx\n");
+            return resultat.toString();
+        }
+        else if(this.type == TypeNode.WHILE){
+            resultat.append( "debut_while_1:\n");
+            resultat.append( this.fg.generateCodeSection());
+            resultat.append( "\tjz sortie_while_1\n");
+            resultat.append( this.fd.generateCodeSection());
+            resultat.append( "\tjmp debut_while_1\n");
+            resultat.append( "sortie_while_1:\n");
+            return resultat.toString();
+        }
+
+        else if (this.type == TypeNode.IF) {
+            resultat.append( this.fg.generateCodeSection());
+            resultat.append( "\tjz faux_if_1\n");
+            resultat.append( this.fd.fg.generateCodeSection());
+            resultat.append( "\tjmp sortie_if_1\n");
+            resultat.append( "faux_if_1 :\n");
+            resultat.append( this.fd.fd.generateCodeSection());
+            resultat.append( "sortie_if_1 :\n");
+            return resultat.toString();
+        }
+
+        else if (this.type == TypeNode.AND) {
+            resultat.append( this.fg.generateCodeSection());
+            resultat.append( "\tjz faux_and_1\n");
+            resultat.append( this.fd.generateCodeSection());
+            resultat.append( "faux_and_1 :\n");
+            return resultat.toString();
+        }
+
+
+        else if (this.type == TypeNode.OR) {
+            resultat.append( this.fg.generateCodeSection());
+            resultat.append( "\tjnz vrai_or_1\n");
+            resultat.append( this.fd.generateCodeSection());
+            resultat.append( "\tjnz vrai_or_1\n");
+            resultat.append( "vrai_or_1 :\n");
+            return resultat.toString();
+        }
+
+        else if (this.type == TypeNode.NOT) {
+            resultat.append( this.fg.generateCodeSection());
+            resultat.append( "\tjnz faux_not_1\n");
+            resultat.append( "\tmov eax, 1\n");
+            resultat.append( "\tjmp sortie_not_1\n");
+            resultat.append( "faux_not_1 :\n");
+            resultat.append( "\tmov eax, 0\n");
+            resultat.append( "sortie_not_1 :\n");
+            return resultat.toString();
+        }
+
+        return resultat.toString();
     }
 }
